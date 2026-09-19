@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ElectricityReadingType {
+  REAL
+  ESTIMATED
+}
+
+enum ElectricityBillStatus {
+  NORMAL
+  RECTIFICATIVE
+  CANCELLED
+}
+
+model Home {
+  id                      String                   @id @default(cuid())
+  name                    String
+  electricityBills        ElectricityBill[]
+  electricitySupplyPoints ElectricitySupplyPoint[]
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+}
+
+model EnergyProvider {
+  id               String            @id @default(cuid())
+  name             String
+  taxId            String?
+  address          String?
+  market           String?
+  electricityBills ElectricityBill[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model ElectricitySupplyPoint {
+  id                String            @id @default(cuid())
+  homeId            String
+  cups              String
+  distributor       String?
+  accessContract    String?
+  gridToll          String?
+  addressLine       String?
+  postalCode        String?
+  city              String?
+  region            String?
+  country           String?
+  contractedPowerP1 Decimal?          @db.Decimal(8, 3)
+  contractedPowerP2 Decimal?          @db.Decimal(8, 3)
+  meters            String?
+  home              Home              @relation(fields: [homeId], references: [id], onDelete: Restrict)
+  electricityBills  ElectricityBill[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@unique([cups])
+  @@index([homeId])
+}
+
+model ElectricityCostCategory {
+  id        String                    @id @default(cuid())
+  name      String                    @unique
+  costLines ElectricityBillCostLine[]
+  createdAt DateTime                  @default(now())
+  updatedAt DateTime                  @updatedAt
+}
+
+model ElectricityBill {
+  id              String                    @id @default(cuid())
+  totalAmount     Decimal                   @db.Decimal(12, 2)
+  issueDate       DateTime
+  paymentDate     DateTime?
+  consumptionKwh  Decimal                   @db.Decimal(12, 3)
+  readingType     ElectricityReadingType?
+  status          ElectricityBillStatus     @default(NORMAL)
+  originalBillId  String?
+  pdfUrl          String?
+  homeId          String
+  providerId      String
+  supplyPointId   String?
+  invoiceNumber   String?
+  referenceNumber String?
+  periodStart     DateTime?
+  periodEnd       DateTime?
+  periodDays      Int?
+  tariff          String?
+  contractNumber  String?
+  home            Home                      @relation(fields: [homeId], references: [id], onDelete: Restrict)
+  provider        EnergyProvider            @relation(fields: [providerId], references: [id], onDelete: Restrict)
+  supplyPoint     ElectricitySupplyPoint?   @relation(fields: [supplyPointId], references: [id], onDelete: SetNull)
+  originalBill    ElectricityBill?          @relation("ElectricityBillCorrection", fields: [originalBillId], references: [id], onDelete: SetNull)
+  corrections     ElectricityBill[]         @relation("ElectricityBillCorrection")
+  costLines       ElectricityBillCostLine[]
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+
+  @@index([homeId, issueDate])
+  @@index([providerId, issueDate])
+  @@index([periodStart, periodEnd])
+  @@index([originalBillId])
+}
+
+model ElectricityBillCostLine {
+  id         String                  @id @default(cuid())
+  billId     String
+  categoryId String
+  amount     Decimal                 @db.Decimal(12, 2)
+  bill       ElectricityBill         @relation(fields: [billId], references: [id], onDelete: Cascade)
+  category   ElectricityCostCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@unique([billId, categoryId])
+  @@index([categoryId])
+}
+
+model ImportRecord {
+  id          String   @id @default(cuid())
+  sourceTable String
+  sourceId    String
+  targetId    String
+  payload     Json
+  importedAt  DateTime @default(now())
+
+  @@unique([sourceTable, sourceId])
+  @@index([sourceTable, targetId])
+}
+
+model LoginRateLimit {
+  keyHash         String    @id
+  failedAttempts  Int       @default(0)
+  windowStartedAt DateTime  @default(now())
+  blockedUntil    DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([blockedUntil])
+}
+
+model SessionControl {
+  id            Int       @id @default(1)
+  revokedBefore DateTime?
+  updatedAt     DateTime  @updatedAt
+}

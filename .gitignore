@@ -30,8 +30,18 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files; only the empty template is safe to track
 .env*
+!.env.example
+
+# local databases, legacy exports, and PostgreSQL backups
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+/var/backups/
+/var/log/
+/src/generated/
 
 # vercel
 .vercel
