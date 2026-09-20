@@ -81,7 +81,25 @@ pnpm backup:db
 pnpm backup:db:verify
 ```
 
-La verificación solo inspecciona el catálogo del archivo con `pg_restore --list`; no conecta ni restaura nada. Consulta [`docs/backup-runbook.md`](docs/backup-runbook.md) para retención y recuperación manual.
+`pnpm backup:db` ejecuta un backup manual inmediato. `pnpm backup:db:cron:install` solo instala o actualiza el bloque idempotente del crontab; no ejecuta el backup en ese momento. La instalación usa `flock`, rutas explícitas para `node` y `pg_dump`, y programa por defecto:
+
+- horario: `01:30 Europe/Madrid` (`30 1 * * *`);
+- log del cron: `var/log/postgres-backup.cron.log`;
+- log persistente del script: `var/log/postgres-backup.log`;
+- retención local: 30 días.
+
+La instalación debe ejecutarse únicamente después de revisar el destino de `DATABASE_URL`. Para comprobar un archivo concreto:
+
+```bash
+scripts/verify-postgres-backup.sh var/backups/postgres/<archivo>.dump
+pg_restore --list var/backups/postgres/<archivo>.dump
+```
+
+La verificación solo inspecciona el catálogo del archivo con `pg_restore --list`; no conecta ni restaura nada. CronWatch genera su informe a las `08:00 Europe/Madrid` y analiza la ventana anterior. Si falta el log o la última ejecución contiene un error, mostrará `SIN EVIDENCIA` o `FALLO`.
+
+`var/backups/postgres/` contiene datos domésticos completos y no se comparte. Una copia en el mismo disco protege frente a errores operativos, pero no sustituye una copia externa.
+
+La restauración sigue siendo manual: confirma siempre el destino, detén las escrituras y crea un backup del estado actual antes de sobrescribir una base. No ejecutes restauraciones con una URL cuyo destino no hayas revisado.
 
 ## Seguridad operativa
 

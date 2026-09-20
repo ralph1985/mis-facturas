@@ -60,11 +60,7 @@ export default async function InvoicesPage({
           {shouldShowHomeSelector(data.homes.length) ? (
             <div className="field">
               <label htmlFor="home">Hogar</label>
-              <select
-                id="home"
-                name="home"
-                defaultValue={filters.homeId ?? ""}
-              >
+              <select id="home" name="home" defaultValue={filters.homeId ?? ""}>
                 <option value="">Todos los hogares</option>
                 {data.homes.map((home) => (
                   <option key={home.id} value={home.id}>

@@ -16,7 +16,8 @@
     "import:legacy": "tsx scripts/import-legacy-sqlite.ts",
     "verify:import": "tsx scripts/verify-electricity-import.ts",
     "backup:db": "scripts/backup-postgres.sh",
-    "backup:db:verify": "scripts/verify-postgres-backup.sh"
+    "backup:db:verify": "scripts/verify-postgres-backup.sh",
+    "backup:db:cron:install": "scripts/install-backup-cron.sh"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
