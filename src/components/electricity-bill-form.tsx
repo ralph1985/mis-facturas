@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useActionState } from "react";
 import type { ElectricityBillInput } from "@/lib/electricity-validation";
+import { shouldShowHomeSelector } from "@/lib/home-selection";
 
 export type FormOption = { id: string; name: string };
 export type FormCostLine = {
@@ -134,22 +135,26 @@ export function ElectricityBillForm({
               <option value="CANCELLED">Anulada</option>
             </select>
           </div>
-          <div className="field">
-            <label htmlFor="homeId">Hogar</label>
-            <select
-              id="homeId"
-              name="homeId"
-              required
-              defaultValue={bill?.homeId ?? ""}
-            >
-              <option value="">Selecciona un hogar</option>
-              {homes.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          {shouldShowHomeSelector(homes.length) ? (
+            <div className="field">
+              <label htmlFor="homeId">Hogar</label>
+              <select
+                id="homeId"
+                name="homeId"
+                required
+                defaultValue={bill?.homeId ?? ""}
+              >
+                <option value="">Selecciona un hogar</option>
+                {homes.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : homes[0] ? (
+            <input type="hidden" name="homeId" value={homes[0].id} />
+          ) : null}
           <div className="field">
             <label htmlFor="providerId">Proveedor</label>
             <select

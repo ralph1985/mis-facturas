@@ -7,6 +7,7 @@ import {
 } from "@/lib/electricity-dashboard";
 import { AppShell } from "@/components/app-navigation";
 import { BillsTable } from "@/components/electricity-dashboard";
+import { shouldShowHomeSelector } from "@/lib/home-selection";
 import { loadElectricityDashboard } from "../electricity-page-data";
 
 export const dynamic = "force-dynamic";
@@ -56,17 +57,23 @@ export default async function InvoicesPage({
           Listado de facturas
         </h2>
         <form className="filters" method="get">
-          <div className="field">
-            <label htmlFor="home">Hogar</label>
-            <select id="home" name="home" defaultValue={filters.homeId ?? ""}>
-              <option value="">Todos los hogares</option>
-              {data.homes.map((home) => (
-                <option key={home.id} value={home.id}>
-                  {home.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          {shouldShowHomeSelector(data.homes.length) ? (
+            <div className="field">
+              <label htmlFor="home">Hogar</label>
+              <select
+                id="home"
+                name="home"
+                defaultValue={filters.homeId ?? ""}
+              >
+                <option value="">Todos los hogares</option>
+                {data.homes.map((home) => (
+                  <option key={home.id} value={home.id}>
+                    {home.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
           <div className="field">
             <label htmlFor="year">Año</label>
             <select
