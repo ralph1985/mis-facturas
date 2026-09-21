@@ -6,7 +6,8 @@ describe("PWA configuration", () => {
     expect(pwa).toEqual({
       name: "Mis Facturas",
       shortName: "Mis Facturas",
-      description: "Consulta sencilla y privada de tus facturas de electricidad.",
+      description:
+        "Consulta sencilla y privada de tus facturas de electricidad.",
       startUrl: "/",
       scope: "/",
       themeColor: "#2f7d68",

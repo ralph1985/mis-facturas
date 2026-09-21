@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import {
-  pwa,
-  pwaAppleWebApp,
-  pwaViewport,
-} from "@/lib/pwa-config";
+import { pwa, pwaAppleWebApp, pwaViewport } from "@/lib/pwa-config";
 import "./globals.css";
 
 export const viewport = pwaViewport;
