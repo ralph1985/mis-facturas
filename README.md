@@ -25,6 +25,16 @@ Variables necesarias:
 
 `MIS_FACTURAS_SESSION_MAX_AGE_SECONDS` es opcional. Si falta, la sesión dura 12 horas; se aceptan valores entre 5 minutos y 30 días.
 
+## Instalación como PWA
+
+La aplicación publica un manifest en `/manifest.webmanifest` y puede instalarse desde un navegador compatible cuando se sirve por HTTPS.
+
+- En Chrome o Edge: abre la aplicación y usa la opción del navegador `Instalar aplicación` o `Añadir a pantalla de inicio`.
+- En Safari para iPhone o iPad: abre la aplicación, pulsa Compartir y elige `Añadir a pantalla de inicio`.
+- La aplicación conserva la autenticación privada y necesita conectividad para consultar o guardar facturas.
+
+La primera versión no usa service worker ni caché offline: no se almacenan facturas ni datos domésticos en el dispositivo por defecto.
+
 ## Hash del código de acceso
 
 El generador no acepta el código como argumento, para evitar que aparezca en el historial o en la lista de procesos. Introduce el código dos veces sin que se muestre en pantalla:
