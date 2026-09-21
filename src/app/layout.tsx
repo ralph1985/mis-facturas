@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
+import {
+  pwa,
+  pwaAppleWebApp,
+  pwaViewport,
+} from "@/lib/pwa-config";
 import "./globals.css";
 
+export const viewport = pwaViewport;
+
 export const metadata: Metadata = {
-  title: "Mis Facturas · Electricidad",
-  description: "Consulta sencilla y privada de tus facturas de electricidad.",
+  title: `${pwa.name} · Electricidad`,
+  description: pwa.description,
+  appleWebApp: pwaAppleWebApp,
 };
 
 export default function RootLayout({
