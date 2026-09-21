@@ -123,14 +123,11 @@ button {
   font-weight: 750;
   letter-spacing: -0.02em;
 }
-.brand-mark {
-  display: grid;
-  place-items: center;
+.brand-logo {
+  display: block;
   width: 34px;
   height: 34px;
   border-radius: 11px;
-  color: white;
-  background: var(--accent);
   box-shadow: 0 7px 16px rgba(47, 125, 104, 0.22);
 }
 .nav-links {

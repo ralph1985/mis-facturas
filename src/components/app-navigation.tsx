@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -15,9 +16,14 @@ export function AppNavigation() {
     <header className="app-nav">
       <div className="app-nav-inner">
         <Link href="/" className="brand" aria-label="Mis Facturas, inicio">
-          <span className="brand-mark" aria-hidden="true">
-            ↗
-          </span>
+          <Image
+            src="/icon.svg"
+            alt=""
+            aria-hidden="true"
+            className="brand-logo"
+            width={34}
+            height={34}
+          />
           <span>Mis Facturas</span>
         </Link>
         <nav className="nav-links" aria-label="Navegación principal">
