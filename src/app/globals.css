@@ -428,7 +428,12 @@ button {
   margin: 0 auto 18px;
 }
 .chart {
+  overflow-x: auto;
   padding-top: 4px;
+}
+.chart-bars,
+.chart-labels {
+  min-width: calc(12 * 22px + 11 * 9px);
 }
 .chart-bars {
   display: grid;
